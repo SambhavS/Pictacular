@@ -78,18 +78,19 @@ def upload_file():
 			needs_start = False
 		# check if the post request has the file part
 		if 'file' not in request.files:
-			return
+			return "Hello"
 		file = request.files['file']
 		# if user does not select file, browser also
 		# submit a empty part without filename
 		if file.filename == '':
-			return
+			return "Hello"
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
 			path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 			file.save(path)
 			run_loop(path)    
 	pics = ["new_"+str(i)+".jpg" for i in range(core.pic_ind)]
+	return "Hello"
 	return render_template('ind.html', pictures=pics)
 
 

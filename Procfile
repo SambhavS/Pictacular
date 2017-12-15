@@ -1,1 +1,1 @@
-web: python pictacular.py
+web: python3 pictacular.py
