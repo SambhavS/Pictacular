@@ -1,1 +1,1 @@
-web: python3 pictacular.py
+web: gunicorn app:app --log-file=-
