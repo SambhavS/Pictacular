@@ -78,12 +78,12 @@ def upload_file():
 			needs_start = False
 		# check if the post request has the file part
 		if 'file' not in request.files:
-			return "Hello"
+			return "Hello1"
 		file = request.files['file']
 		# if user does not select file, browser also
 		# submit a empty part without filename
 		if file.filename == '':
-			return "Hello"
+			return "Hello2"
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
 			path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
