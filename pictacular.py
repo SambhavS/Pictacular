@@ -90,7 +90,6 @@ def upload_file():
 			file.save(path)
 			run_loop(path)    
 	pics = ["new_"+str(i)+".jpg" for i in range(core.pic_ind)]
-	return "Hello"
 	return render_template('ind.html', pictures=pics)
 
 
