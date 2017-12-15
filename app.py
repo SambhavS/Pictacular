@@ -9,7 +9,7 @@ from mapdic import get_mapdict
 #Pictacular
 ###
 #Note: Numbers may need to be modified depending on the number of images and dimensions of images used.
-
+####
 
 class PicCore:
 	def __init__(self):
