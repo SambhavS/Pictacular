@@ -1,3 +1,6 @@
+Flask==0.10.1
+Jinja2==2.8
+mpld3==0.2
 altgraph==0.10.2
 bdist-mpkg==0.5.0
 macholib==1.5.1
@@ -7,7 +10,6 @@ numpy==1.8.0
 olefile==0.44
 Pillow==4.3.0
 py2app==0.7.3
-pyOpenSSL==0.13.1
 pyparsing==2.0.1
 python-dateutil==1.5
 pytz==2013.7
