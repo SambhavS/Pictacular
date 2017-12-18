@@ -1,13 +1,91 @@
 <!doctype html>
 <html>
-	<title>Upload new File</title>
-	<h1>Upload new File</h1>
-	<form method=post enctype=multipart/form-data>
-	  <p><input type=file name=file>
-		 <input type=submit value=Upload>
-		</p>
-		{% for img_name in pictures %}
-		<img src="/static/{{img_name}}" height="500", width="500">
-		{% endfor %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<style type="text/css">
+		body {font-family: Tahoma, Geneva, sans-serif}
+		#main {
+			padding: 25px;
+			border-left: 15px solid blue;
+			margin: 25px;
+			background: #DDFFFF
+		}
+		.piclink{
+			margin: 5px;
+		}
+	</style>
+	<body onload="make_folder()">
+	<title>Pictacular</title>
+	<div id="main">
+	<h1>Pictacular! </h1>
+	<p> Upload an image and receive a pictacular mosaic picture below!</p>
+
+
+	<form id="file-form"  method="POST">
+  	<input type="file" id="file-select"/>
+  	<button type="submit" id="upload-button">Upload</button>
 	</form>
+	<br>
+	<div id="big">
+		<div id="all_links">
+		</div>
+	</div>
+</div>
+	</body>
+
+
+
+	<script type="text/javascript">
+		var make_folder = function (){
+			var req = new XMLHttpRequest();
+			req.open('POST','/folder');
+			req.send('open')
+		};
+		var clear_data = function () {
+			var req = new XMLHttpRequest();
+			req.open('POST','/folder');
+			req.send('close');
+		};
+		window.onbeforeunload = function () {
+			clear_data();
+		};		
+
+		var form = document.getElementById('file-form');
+		var fileSelect = document.getElementById('file-select');
+		var uploadButton = document.getElementById('upload-button');
+		form.onsubmit = function(event) {
+		  event.preventDefault();
+		  var data = new FormData();
+		  var file = fileSelect.files[0];
+		  data.append("file",file,file.name)
+		  var req = new XMLHttpRequest();
+		  req.open("POST","/", true);
+		  req.send(data);
+		  var get_links = new XMLHttpRequest();
+		  get_links.onreadystatechange = function() {
+		    if (this.readyState == 4 && this.status == 200) {
+		    var links = JSON.parse(this.responseText);
+		    var el = document.getElementById("all_links");
+		    var p = document.getElementById("big");
+		    p.removeChild(el);
+			var pic_links = document.createElement("DIV");
+			pic_links.setAttribute("id","all_links");
+		     for (var i = 0; i<links.length; i++){
+		      	var trial = document.createElement("A");
+		      	var name = "Picture "+(i+1).toString()
+		      	trial.setAttribute("href",links[i]);
+		      	trial.setAttribute("download",name);
+		      	trial.setAttribute("class","piclink")
+		      	trial.innerHTML = name;
+		      	pic_links.appendChild(trial);
+		      	pic_links.appendChild(document.createElement("BR"));
+		      };
+		      p.appendChild(pic_links);
+		    }
+
+		 };
+		  get_links.open("GET",'/links',true);
+		  get_links.send();
+
+		}
+	</script>
 </html>

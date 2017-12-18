@@ -1,9 +1,11 @@
 import os
-from flask import Flask, request, redirect, url_for, render_template, flash
+from flask import Flask, request, redirect, url_for, render_template, flash, jsonify
 from werkzeug.utils import secure_filename
 from math import sqrt
 from PIL import Image
 from mapdic import get_mapdict
+import random
+import shutil
 
 ###
 #Pictacular
@@ -37,7 +39,7 @@ def run_loop(orig_name):
 	final_width = core.final_width
 	orig = Image.open(orig_name).resize((final_width,final_width))
 	new_image = Image.new('RGB',(final_width,final_width))
-	square_ratio = 100
+	square_ratio = 50
 	square_width = int(final_width/square_ratio)
 	x_offset = 0
 	all_images = {}
@@ -54,7 +56,7 @@ def run_loop(orig_name):
 			new_image.paste(replacement, (x_offset,y_offset))
 			y_offset+=int(square_width)
 		x_offset+=int(square_width)
-	new_image.save("static/new_"+str(core.pic_ind)+".jpg")
+	new_image.save(user_folder+"/new_"+str(core.pic_ind)+".jpg")
 	core.pic_ind+=1
 
 ###
@@ -62,20 +64,41 @@ def run_loop(orig_name):
 ###
 UPLOAD_FOLDER = 'path/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-needs_start = True
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+user_folder = ""
 
 def allowed_file(filename):
 	return '.' in filename and \
 		   filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def get_pics():
+		return [user_folder+"/new_"+str(i)+".jpg" for i in range(core.pic_ind)]
+@app.route('/folder', methods = ['GET','POST'])
+def close_folder():
+	global user_folder
+	stringy = request.data.decode("utf-8")
+	print(stringy)
+	if stringy == "open":
+		core.pic_ind = 0
+		user_num = random.randint(1,100000000)
+		user_folder = "static/user"+str(user_num)
+		os.makedirs(user_folder)
+		print(3)
+	elif stringy == "close":
+		print(2)
+		shutil.rmtree(user_folder)
+		user_folder=""
+	return "hello"
+
+@app.route('/links',methods=['GET','POST'])
+def get_links():
+	print(1)
+	if request.method == 'GET':
+		return jsonify(get_pics())
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
 	if request.method == 'POST':
-		global needs_start
-		if needs_start:
-			needs_start = False
 		# check if the post request has the file part
 		if 'file' not in request.files:
 			return "Hello1"
@@ -88,8 +111,8 @@ def upload_file():
 			filename = secure_filename(file.filename)
 			path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 			file.save(path)
-			run_loop(path)    
-	pics = ["new_"+str(i)+".jpg" for i in range(core.pic_ind)]
+			run_loop(path)
+	pics = get_pics()
 	return render_template('ind.html', pictures=pics)
 
 

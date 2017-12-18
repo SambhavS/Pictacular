@@ -31,4 +31,4 @@ def setup(self):
 				for b in range(0,256,32):
 					zone = (r,g,b)
 					self.zones_and_images[zone] = min(pics_and_cols, key = lambda entry: dist(entry[2],zone))[:2]
-"""
+""" 
