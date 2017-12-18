@@ -13,26 +13,22 @@
 			margin: 5px;
 		}
 	</style>
+
 	<body onload="make_folder()">
 	<title>Pictacular V1.2</title>
 	<div id="main">
 	<h1>Pictacular! </h1>
 	<p> Upload an image and receive a pictacular mosaic picture below!</p>
-
-
 	<form id="file-form"  method="POST">
   	<input type="file" id="file-select"/>
-  	<button type="submit" id="upload-button">Upload</button>
+  	<button type="submit" id="upload-button">Submit</button>
 	</form>
 	<br>
 	<div id="big">
-		<div id="all_links">
-		</div>
+		<div id="all_links"></div>
 	</div>
-</div>
+	</div>
 	</body>
-
-
 
 	<script type="text/javascript">
 		var make_folder = function (){
@@ -51,15 +47,16 @@
 
 		var form = document.getElementById('file-form');
 		var fileSelect = document.getElementById('file-select');
-		var uploadButton = document.getElementById('upload-button');
 		form.onsubmit = function(event) {
 		  event.preventDefault();
 		  var data = new FormData();
 		  var file = fileSelect.files[0];
 		  data.append("file",file,file.name)
+		  //Send upload
 		  var req = new XMLHttpRequest();
 		  req.open("POST","/", true);
 		  req.send(data);
+		  //Receive new images
 		  var get_links = new XMLHttpRequest();
 		  get_links.onreadystatechange = function() {
 		    if (this.readyState == 4 && this.status == 200) {
@@ -81,11 +78,9 @@
 		      };
 		      p.appendChild(pic_links);
 		    }
-
 		 };
 		  get_links.open("GET",'/links',true);
 		  get_links.send();
-
 		}
 	</script>
 </html>

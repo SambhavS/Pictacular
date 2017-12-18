@@ -92,7 +92,6 @@ def close_folder():
 
 @app.route('/links',methods=['GET','POST'])
 def get_links():
-	print(1)
 	if request.method == 'GET':
 		return jsonify(get_pics())
 
@@ -114,7 +113,6 @@ def upload_file():
 			run_loop(path)
 	pics = get_pics()
 	return render_template('ind.html', pictures=pics)
-
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
