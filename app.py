@@ -4,8 +4,6 @@ from werkzeug.utils import secure_filename
 from math import sqrt
 from PIL import Image
 from mapdic import get_mapdict
-import random
-import shutil
 import base64
 import io
 
