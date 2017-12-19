@@ -35,7 +35,7 @@ def run_loop(img):
 					pix = pic.getpixel((i,j))
 					if(type(pix)==tuple):
 						col[0], col[1], col[2] = col[0] + pix[0]/pixels, col[1] + pix[1]/pixels, col[2] + pix[2]/pixels
-			return tuple([32*(int(val)//32) for val in col])
+			return tuple([16*(int(val)//16) for val in col])
 	final_width = core.final_width
 	orig = img.resize((final_width,final_width))
 	new_image = Image.new('RGB',(final_width,final_width))
