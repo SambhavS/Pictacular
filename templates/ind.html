@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<style type="text/css">
 		body {font-family: Tahoma, Geneva, sans-serif}
 		#main {
@@ -14,7 +13,7 @@
 		}
 	</style>
 
-	<body onload="make_folder()">
+	<body >
 	<title>Pictacular V1.2</title>
 	<div id="main">
 	<h1>Pictacular! </h1>
@@ -24,29 +23,15 @@
   	<button type="submit" id="upload-button">Submit</button>
 	</form>
 	<br>
-	<div id="big">
-		<div id="all_links"></div>
+	<div id="all_links">
 	</div>
 	</div>
 	</body>
 
 	<script type="text/javascript">
-		var make_folder = function (){
-			var req = new XMLHttpRequest();
-			req.open('POST','/folder');
-			req.send('open')
-		};
-		var clear_data = function () {
-			var req = new XMLHttpRequest();
-			req.open('POST','/folder');
-			req.send('close');
-		};
-		window.onbeforeunload = function () {
-			clear_data();
-		};		
-
 		var form = document.getElementById('file-form');
 		var fileSelect = document.getElementById('file-select');
+		var pic_num = 1;
 		form.onsubmit = function(event) {
 		  event.preventDefault();
 		  var data = new FormData();
@@ -54,33 +39,22 @@
 		  data.append("file",file,file.name)
 		  //Send upload
 		  var req = new XMLHttpRequest();
-		  req.open("POST","/", true);
+		  req.open("POST","/upload", true);
 		  req.send(data);
 		  //Receive new images
-		  var get_links = new XMLHttpRequest();
-		  get_links.onreadystatechange = function() {
+		  req.onreadystatechange = function() {
 		    if (this.readyState == 4 && this.status == 200) {
-		    var links = JSON.parse(this.responseText);
-		    var el = document.getElementById("all_links");
-		    var p = document.getElementById("big");
-		    p.removeChild(el);
-			var pic_links = document.createElement("DIV");
-			pic_links.setAttribute("id","all_links");
-		     for (var i = 0; i<links.length; i++){
-		      	var trial = document.createElement("A");
-		      	var name = "Picture "+(i+1).toString()
-		      	trial.setAttribute("href",links[i]);
-		      	trial.setAttribute("download",name);
-		      	trial.setAttribute("class","piclink")
-		      	trial.innerHTML = name;
-		      	pic_links.appendChild(trial);
-		      	pic_links.appendChild(document.createElement("BR"));
-		      };
-		      p.appendChild(pic_links);
-		    }
+		    var all_links = document.getElementById("all_links");
+		    var b64img = this.responseText;
+		 	var pic = document.createElement("A");
+		 	pic.setAttribute("href","data:image/png;base64,"+b64img);
+		 	pic.setAttribute("download","Pic #"+pic_num.toString()+".png");
+		 	pic.innerHTML = "Picture #"+pic_num.toString();
+		 	pic_num+=1
+		    all_links.appendChild(pic);
+		    all_links.appendChild(document.createElement("BR"));
+		    	};
+		    };
 		 };
-		  get_links.open("GET",'/links',true);
-		  get_links.send();
-		}
 	</script>
 </html>

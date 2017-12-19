@@ -6,6 +6,8 @@ from PIL import Image
 from mapdic import get_mapdict
 import random
 import shutil
+import base64
+import io
 
 ###
 #Pictacular
@@ -15,12 +17,12 @@ import shutil
 
 class PicCore:
 	def __init__(self):
-		self.final_width = 6000
+		self.final_width = 2500
 		self.pic_ind = 0
 		self.zone_map = get_mapdict()
 core = PicCore()
 
-def run_loop(orig_name):
+def run_loop(img):
 	def rounded_col(pic):
 		if max(pic.width,pic.height)/float(min(pic.width,pic.height)) < 1.5:
 			square_width = 150
@@ -37,9 +39,9 @@ def run_loop(orig_name):
 						col[0], col[1], col[2] = col[0] + pix[0]/pixels, col[1] + pix[1]/pixels, col[2] + pix[2]/pixels
 			return tuple([32*(int(val)//32) for val in col])
 	final_width = core.final_width
-	orig = Image.open(orig_name).resize((final_width,final_width))
+	orig = img.resize((final_width,final_width))
 	new_image = Image.new('RGB',(final_width,final_width))
-	square_ratio = 50
+	square_ratio = 60
 	square_width = int(final_width/square_ratio)
 	x_offset = 0
 	all_images = {}
@@ -56,8 +58,8 @@ def run_loop(orig_name):
 			new_image.paste(replacement, (x_offset,y_offset))
 			y_offset+=int(square_width)
 		x_offset+=int(square_width)
-	new_image.save(user_folder+"/new_"+str(core.pic_ind)+".jpg")
 	core.pic_ind+=1
+	return new_image
 
 ###
 #Flask
@@ -71,48 +73,34 @@ user_folder = ""
 def allowed_file(filename):
 	return '.' in filename and \
 		   filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-def get_pics():
-		return [user_folder+"/new_"+str(i)+".jpg" for i in range(core.pic_ind)]
-@app.route('/folder', methods = ['GET','POST'])
-def close_folder():
-	global user_folder
-	stringy = request.data.decode("utf-8")
-	print(stringy)
-	if stringy == "open":
-		core.pic_ind = 0
-		user_num = random.randint(1,100000000)
-		user_folder = "static/user"+str(user_num)
-		os.makedirs(user_folder)
-		print(3)
-	elif stringy == "close":
-		print(2)
-		shutil.rmtree(user_folder)
-		user_folder=""
-	return "hello"
 
-@app.route('/links',methods=['GET','POST'])
-def get_links():
-	if request.method == 'GET':
-		return jsonify(get_pics())
-
-@app.route('/', methods=['GET', 'POST'])
-def upload_file():
+@app.route('/upload',methods=['GET','POST'])
+def upload():
 	if request.method == 'POST':
 		# check if the post request has the file part
 		if 'file' not in request.files:
-			return "Hello1"
+			return "What is this supposed to check for?"
 		file = request.files['file']
+		img = Image.open(io.BytesIO(file.read())).convert()
+
 		# if user does not select file, browser also
 		# submit a empty part without filename
 		if file.filename == '':
-			return "Hello2"
+			return "Hi! You didn't enter a file! Go back and enter one."
 		if file and allowed_file(file.filename):
-			filename = secure_filename(file.filename)
-			path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-			file.save(path)
-			run_loop(path)
-	pics = get_pics()
-	return render_template('ind.html', pictures=pics)
+			output =  run_loop(img)
+			in_mem_file = io.BytesIO()
+			output.save(in_mem_file, format = "PNG")
+			# reset file pointer to start
+			in_mem_file.seek(0)
+			img_bytes = in_mem_file.read()
+			base64_encoded_result_bytes = base64.b64encode(img_bytes)
+			result = base64_encoded_result_bytes.decode('ascii')
+			return result
+
+@app.route('/', methods=['GET', 'POST'])
+def normal():
+	return render_template('ind.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True)
+	app.run(debug=True, use_reloader=True)
