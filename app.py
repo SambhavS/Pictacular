@@ -78,7 +78,6 @@ def upload():
 			return "What is this supposed to check for?"
 		file = request.files['file']
 		img = Image.open(io.BytesIO(file.read())).convert()
-
 		# if user does not select file, browser also
 		# submit a empty part without filename
 		if file.filename == '':
@@ -93,6 +92,21 @@ def upload():
 			base64_encoded_result_bytes = base64.b64encode(img_bytes)
 			result = base64_encoded_result_bytes.decode('ascii')
 			return result
+@app.route('/init_total', methods=["GET"])
+def init_total():
+	f = open("total.txt",'r')
+	total = str(int(f.read()))
+	f.close()
+	return total
+
+@app.route('/total',methods=["GET"])
+def total_users():
+	f = open("total.txt",'r')
+	total = int(f.read()) + 1
+	f.close()
+	f = open("total.txt", 'w')
+	f.write(str(total))
+	return str(total)
 
 @app.route('/', methods=['GET', 'POST'])
 def normal():
