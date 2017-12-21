@@ -8,6 +8,6 @@ Check it out interactively at https://pictacular-flask.herokuapp.com
 
 <img src="static/orig.jpg" width="600">
 
-*Output
+*Output*
 
 <img src="static/better.png" width="600">
