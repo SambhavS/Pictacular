@@ -3,5 +3,5 @@ Using a 10,000 image dataset, it rapidly synthesizes images to recreate your ori
 Check it out interactively at https://pictacular-flask.herokuapp.com
 
 **Example**
-![alt Original](static/orig.jpg {width=250px height=250px})
-![alt Output](static/better.png {width=250px height=250px})
+<img src="static/orig.jpg" width="250">
+<img src="static/better.png" width="250">
