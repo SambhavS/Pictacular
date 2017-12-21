@@ -5,5 +5,5 @@ Check it out interactively at https://pictacular-flask.herokuapp.com
 **Example**
 
 
-<img src="static/orig.jpg" width="400">
-<img src="static/better.png" width="400">
+<img src="static/orig.jpg" width="600">
+<img src="static/better.png" width="600">
