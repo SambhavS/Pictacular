@@ -4,6 +4,10 @@ Check it out interactively at https://pictacular-flask.herokuapp.com
 
 **Example**
 
+*Original*
 
 <img src="static/orig.jpg" width="600">
+
+*Output
+
 <img src="static/better.png" width="600">
