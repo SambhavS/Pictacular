@@ -12,7 +12,7 @@ The time complexity for this naive algorithm would be O(NxMxP). N would likely b
 
 One simple way to make it faster is to cache the average color of each pixel. This removes having to do 1 million calculations for each photo each time. This means we only have to do O(N*P) or 30 million calculations. However, this is still too slow. 
 
-## Algorithm: Optimized (7,000 Times Faster than Less Naive & 7 Billion Times Faster than Naive)
+## Algorithm: Optimized (7 Thousand Times Faster than Less Naive & 7 Billion Times Faster than Naive)
 I devised a more clever algorithm to solve this problem. First, we create a finite RGB color vector space. This is just a fancy term for a color cube. (To see what this looks like, check out this picture: https://i.stack.imgur.com/hSPKq.gif ).
 This color cube is basically a 3D spectrum that contains all possible colors. We break this cube into subcubes by slicing the cube into 16 layers, on each of the 3 dimensions. As a result we get 16^3 or 4096 subcubes. Each subcube represents one area of color, or a color zone. For each color zone, we map it to the closest image. Again, instead of calculating the average color of every image over and over, we simply calculate it once and cache the results. Also, instead of finding average color by using every pixel we can use every 15th column and every 15th row. To map each color zone to the nearest image, we compare it to all of the average colors. The time complexity to create this mapping is O(S*M) where S is the number of subcubes and M is the number of images in the database. This is around 4000x10,000 or 40 million calculations. This seems to be no better than our Less Naive solution; when I ran this on my computer it took several minutes to finish computing! 
 
