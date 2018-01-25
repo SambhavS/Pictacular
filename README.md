@@ -6,7 +6,7 @@ Using a 10,000 image dataset, it rapidly synthesizes images to recreate your ori
 ## Algorithm : Naive
 The naive solution to this problem would be to take the given image (G) and divide it up into N squares. For each of the N squares, we would find the average color by adding up all the color values and dividing it by the number of pixels. For each of the N squares we would go through each of the M images in our database, compute the average color, requiring a calculation for P pixels. We would compare the average color of G to each of the average colors and find the closest, requiring M comparisons. Finally, we would replace each square with the new image.
 
-The time complexity for this naive algorithm would be O(NxMxP). N would likely be around 3000, M is around 10,000 and P would be around 1,000,000. This means that to produce one image would take *30 trillion calculations*. Clearly this is too slow & we need a better solution. 
+The time complexity for this naive algorithm would be O(NxMxP). N would likely be around 3000, M is around 10,000 and P would be around 1,000,000. This means that to produce one image would take *30 trillion calculations*. While this solutions is simple it is far too slow and we clearly need a different better approach.
 
 ## Algorithm: Optimized (5 Million Times Faster)
 I devised a more clever algorithm to solve this problem. First, we create a finite RGB color vector space. This is just a fancy term for a color cube. (To see what this looks like, check out this picture: https://i.stack.imgur.com/hSPKq.gif ).
