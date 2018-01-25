@@ -14,7 +14,7 @@ This color cube is basically a 3D spectrum that contains all possible colors. We
 
 *But!*
 
-But we don't need to calculate this mapping everytime! We only need to calculate it once and then we can cache it and use it for later. Using our mapping, we have a much more efficient way to create a mosaic. We break our image into N cubes and find the average color of each cube. Once we have the average color, we can find it's color zone and, in constant time, get the image from the mapping. The only thing that now takes proportionally increasing time is averaging colors, but we have made that even faster by selecting only every 15th row and every 15th pixel. 
+But we don't need to calculate this mapping everytime! We only need to calculate it once and then we can cache it and use it later. Using our mapping, we have a much more efficient way to create a mosaic. We break our image into N cubes and find the average color of each cube. Once we have the average color, we can find it's color zone and, in constant time, get the image from the mapping. The only thing that now takes proportionally increasing time is averaging colors, but we have made that even faster by selecting only every 15th row and every 15th pixel. 
 
 
 Thus we have now acheived *O(W/k^2) time*, where W is the number of pixels of the given picture and k is the number of rows and columns we skip between picking each pixel. We have gone from 30 trillion calculations to only around 4 thousand calculations. Thus we have made our program over *5 million times faster*.
